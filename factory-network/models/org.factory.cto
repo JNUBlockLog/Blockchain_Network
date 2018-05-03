@@ -4,6 +4,20 @@
 
 namespace org.factory
 
+abstract participant User{
+}
+
+asset Device identified by DeviceID{
+  o String DeviceID
+  o String CPUInfomation
+  o Double Processes
+  o String MACAddress
+  o String DeviceType
+  o String DeviceDesc
+  --> User DeviceUser
+  --> User DeviceManager
+}
+
 asset ElectronicUnit identified by EUID{
   o String EUID
   o String manufacturer
@@ -15,20 +29,22 @@ asset PCB identified by PCBID{
   o String PCBID
   o String manufacturer
   o Double price
+  o String attribute
   o String currentStatus
 }
 
-participant MaterialsWorker identified by WorkerID {
+participant MaterialsWorker identified by WorkerID extends User{
   o String WorkerID
 }
 
-participant LogisticsWorker identified by WorkerID {
+participant LogisticsWorker identified by WorkerID extends User{
   o String WorkerID
 }
 
-participant AssemblyWorker identified by WorkerID {
+participant AssemblyWorker identified by WorkerID extends User{
   o String WorkerID
 }
+
 transaction importRequest {
   --> LogisticsWorker worker
   --> ElectronicUnit unit
