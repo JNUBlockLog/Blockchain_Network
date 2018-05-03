@@ -4,7 +4,7 @@
 
 namespace org.factory
 
-abstract participant User{
+abstract participant Worker{
 }
 
 asset Device identified by DeviceID{
@@ -14,8 +14,8 @@ asset Device identified by DeviceID{
   o String MACAddress
   o String DeviceType
   o String DeviceDesc
-  --> User DeviceUser
-  --> User DeviceManager
+  --> Worker DeviceUser
+  --> Worker DeviceManager
 }
 
 asset ElectronicUnit identified by EUID{
@@ -33,15 +33,15 @@ asset PCB identified by PCBID{
   o String currentStatus
 }
 
-participant MaterialsWorker identified by WorkerID extends User{
+participant MaterialsWorker identified by WorkerID extends Worker{
   o String WorkerID
 }
 
-participant LogisticsWorker identified by WorkerID extends User{
+participant LogisticsWorker identified by WorkerID extends Worker{
   o String WorkerID
 }
 
-participant AssemblyWorker identified by WorkerID extends User{
+participant AssemblyWorker identified by WorkerID extends Worker{
   o String WorkerID
 }
 
