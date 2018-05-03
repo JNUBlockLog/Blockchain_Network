@@ -18,26 +18,35 @@
  */
 
 /**
- * Sample transaction
- * @param {org.factory.SampleTransaction} sampleTransaction
+ * Logistics imports Materials from outer world
+ * @param {org.factory.importRequest} importRequest
  * @transaction
  */
-async function sampleTransaction(tx) {
-    // Save the old value of the asset.
-    const oldValue = tx.asset.value;
-
-    // Update the asset with the new value.
-    tx.asset.value = tx.newValue;
-
-    // Get the asset registry for the asset.
-    const assetRegistry = await getAssetRegistry('org.factory.SampleAsset');
-    // Update the asset in the asset registry.
-    await assetRegistry.update(tx.asset);
-
-    // Emit an event for the modified asset.
-    let event = getFactory().newEvent('org.factory', 'SampleEvent');
-    event.asset = tx.asset;
-    event.oldValue = oldValue;
-    event.newValue = tx.newValue;
-    emit(event);
+async function importRequest(tx) {
+    let event = getFactory().newEvent('org.factory','importRequested');
+    event.worker = tx.worker
+    event.unit = tx.unit;
+    emit(event)
+}
+/**
+ * Logistics completes imports Materials from outer world
+ * @param {org.factory.importComplete} importComplete
+ * @transaction
+ */
+async function importComplete(tx) {
+    let event = getFactory().newEvent('org.factory','importCompeleted');
+    event.worker = tx.worker
+    event.unit = tx.unit;
+    emit(event)
+}
+/**
+ * Logistics completes imports Materials from outer world
+ * @param {org.factory.moveRequest} moveRequest
+ * @transaction
+ */
+async function moveRequest(tx) {
+    let event = getFactory().newEvent('org.factory','moveRequested');
+    event.worker = tx.worker
+    event.unit = tx.unit;
+    emit(event)
 }

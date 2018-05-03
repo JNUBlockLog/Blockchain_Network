@@ -50,6 +50,7 @@ transaction importRequest {
   --> ElectronicUnit unit
 }
 event importRequested{
+  --> LogisticsWorker worker
   --> ElectronicUnit unit
 }
 transaction importComplete {
@@ -57,6 +58,7 @@ transaction importComplete {
   --> ElectronicUnit unit
 }
 event importCompleted{
+  --> LogisticsWorker worker
   --> ElectronicUnit unit
 }
 transaction moveRequest {
@@ -64,6 +66,7 @@ transaction moveRequest {
   --> ElectronicUnit unit
 }
 event moveRequested {
+  --> MaterialsWorker worker
   --> ElectronicUnit unit
 }
 transaction moveComplete {
@@ -71,6 +74,7 @@ transaction moveComplete {
   --> ElectronicUnit unit
 }
 event moveCompleted {
+  --> MaterialsWorker worker
   --> ElectronicUnit unit
 }
 transaction assemblyRequest {
@@ -79,6 +83,7 @@ transaction assemblyRequest {
   o String ECBType
 }
 event assemblyRequested {
+  --> AssemblyWorker worker
   --> ElectronicUnit[] units
   o String ECBType
 }
@@ -90,27 +95,4 @@ transaction assemblyComplete {
 event assemblyCompleted {
   --> ElectronicUnit[] units
   --> PCB pcb
-}
-
-participant SampleParticipant identified by participantId {
-  o String participantId
-  o String firstName
-  o String lastName
-}
-
-asset SampleAsset identified by assetId {
-  o String assetId
-  --> SampleParticipant owner
-  o String value
-}
-
-transaction SampleTransaction {
-  --> SampleAsset asset
-  o String newValue
-}
-
-event SampleEvent {
-  --> SampleAsset asset
-  o String oldValue
-  o String newValue
 }
