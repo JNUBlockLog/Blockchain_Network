@@ -49,29 +49,45 @@ transaction importRequest {
   --> LogisticsWorker worker
   --> ElectronicUnit unit
 }
-
+event importRequested{
+  --> ElectronicUnit unit
+}
 transaction importComplete {
   --> LogisticsWorker worker
   --> ElectronicUnit unit
 }
-
+event importCompleted{
+  --> ElectronicUnit unit
+}
 transaction moveRequest {
   --> MaterialsWorker worker
   --> ElectronicUnit unit
 }
-
+event moveRequested {
+  --> ElectronicUnit unit
+}
 transaction moveComplete {
   --> MaterialsWorker worker
   --> ElectronicUnit unit
 }
-
+event moveCompleted {
+  --> ElectronicUnit unit
+}
 transaction assemblyRequest {
   --> AssemblyWorker worker
   o ElectronicUnit[] units
+  o String ECBType
 }
-
+event assemblyRequested {
+  --> ElectronicUnit[] units
+  o String ECBType
+}
 transaction assemblyComplete {
   --> MaterialsWorker worker
+  --> ElectronicUnit[] units
+  --> PCB pcb
+}
+event assemblyCompleted {
   --> ElectronicUnit[] units
   --> PCB pcb
 }
