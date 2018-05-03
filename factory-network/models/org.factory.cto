@@ -4,6 +4,62 @@
 
 namespace org.factory
 
+asset ElectronicUnit identified by EUID{
+  o String EUID
+  o String manufacturer
+  o Double price
+  o String currentStatus
+}
+
+asset PCB identified by PCBID{
+  o String PCBID
+  o String manufacturer
+  o Double price
+  o String currentStatus
+}
+
+participant MaterialsWorker identified by WorkerID {
+  o String WorkerID
+}
+
+participant LogisticsWorker identified by WorkerID {
+  o String WorkerID
+}
+
+participant AssemblyWorker identified by WorkerID {
+  o String WorkerID
+}
+transaction importRequest {
+  --> LogisticsWorker worker
+  --> ElectronicUnit unit
+}
+
+transaction importComplete {
+  --> LogisticsWorker worker
+  --> ElectronicUnit unit
+}
+
+transaction moveRequest {
+  --> MaterialsWorker worker
+  --> ElectronicUnit unit
+}
+
+transaction moveComplete {
+  --> MaterialsWorker worker
+  --> ElectronicUnit unit
+}
+
+transaction assemblyRequest {
+  --> AssemblyWorker worker
+  o ElectronicUnit[] units
+}
+
+transaction assemblyComplete {
+  --> MaterialsWorker worker
+  --> ElectronicUnit[] units
+  --> PCB pcb
+}
+
 participant SampleParticipant identified by participantId {
   o String participantId
   o String firstName
