@@ -3,7 +3,7 @@
  */
 rule EverybodyCanReadEverything {
     description: "Allow all participants read access to all resources"
-    participant: "org.factory.Worker"
+    participant: "org.factory.SecurityManager"
     operation: READ
     resource: "org.factory.*"
     action: ALLOW
@@ -11,15 +11,15 @@ rule EverybodyCanReadEverything {
 
 rule EverybodyCanSubmitTransactions {
     description: "Allow all participants to submit transactions"
-    participant: "org.factory.Worker"
+    participant: "org.factory.SecurityManager"
     operation: CREATE
-    resource: "org.factory.importRequest"
+    resource: "org.factory.refreshDevice"
     action: ALLOW
 }
 
 rule OwnerHasFullAccessToTheirAssets {
     description: "Allow all participants full access to their assets"
-    participant(p): "org.factory.Worker"
+    participant(p): "org.factory.SecurityManager"
     operation: ALL
     resource(r): "org.factory.Device"
     condition: (r.owner.getIdentifier() === p.getIdentifier())

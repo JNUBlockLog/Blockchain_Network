@@ -4,95 +4,138 @@
 
 namespace org.factory
 
-abstract participant Worker{
-}
-
 asset Device identified by DeviceID{
   o String DeviceID
-  o String CPUInfomation
-  o Double Processes
-  o String MACAddress
-  o String DeviceType
-  o String DeviceDesc
-  --> Worker DeviceUser
-  --> Worker DeviceManager
 }
 
-asset ElectronicUnit identified by EUID{
-  o String EUID
-  o String manufacturer
-  o Double price
-  o String currentStatus
+participant Department identified by DepartmentID {
+  o String DepartmentID
 }
 
-asset PCB identified by PCBID{
-  o String PCBID
-  o String manufacturer
-  o Double price
-  o String attribute
-  o String currentStatus
+participant SecurityManager identified by EmployeeID {
+  o String EmployeeID
+  --> Department departmentID
 }
 
-participant MaterialsWorker identified by WorkerID extends Worker{
-  o String WorkerID
+participant DeviceManager identified by EmployeeID {
+  o String EmployeeID
+  --> Department departmentID
 }
 
-participant LogisticsWorker identified by WorkerID extends Worker{
-  o String WorkerID
+event deviceEnrolled {
+  --> Device device
 }
 
-participant AssemblyWorker identified by WorkerID extends Worker{
-  o String WorkerID
+transaction moveDeviceLocation {
+  --> Device device
+  --> Department department
 }
 
-transaction importRequest {
-  --> LogisticsWorker worker
-  --> ElectronicUnit unit
+event deviceLocationMoved {
+  --> Device device
+  --> Department department
 }
-event importRequested{
-  --> LogisticsWorker worker
-  --> ElectronicUnit unit
+
+transaction refreshDevice {
 }
-transaction importComplete {
-  --> LogisticsWorker worker
-  --> ElectronicUnit unit
+
+event refreshRequest {
 }
-event importCompleted{
-  --> LogisticsWorker worker
-  --> ElectronicUnit unit
+
+transaction changeDeviceManager {
+  --> Device device
+  --> DeviceManager manager
 }
-transaction moveRequest {
-  --> MaterialsWorker worker
-  --> ElectronicUnit unit
-}
-event moveRequested {
-  --> MaterialsWorker worker
-  --> ElectronicUnit unit
-}
-transaction moveComplete {
-  --> MaterialsWorker worker
-  --> ElectronicUnit unit
-}
-event moveCompleted {
-  --> MaterialsWorker worker
-  --> ElectronicUnit unit
-}
-transaction assemblyRequest {
-  --> AssemblyWorker worker
-  o ElectronicUnit[] units
-  o String ECBType
-}
-event assemblyRequested {
-  --> AssemblyWorker worker
-  --> ElectronicUnit[] units
-  o String ECBType
-}
-transaction assemblyComplete {
-  --> MaterialsWorker worker
-  --> ElectronicUnit[] units
-  --> PCB pcb
-}
-event assemblyCompleted {
-  --> ElectronicUnit[] units
-  --> PCB pcb
-}
+
+// abstract participant Worker{
+// }
+
+// asset Device identified by DeviceID{
+//   o String DeviceID
+//   o String CPUInfomation
+//   o String Processes
+//   o String MACAddress
+//   o String DeviceType
+//   o String DeviceDesc
+//   --> Worker DeviceUser
+//   --> Worker DeviceManager
+// }
+
+// asset ElectronicUnit identified by EUID{
+//   o String EUID
+//   o String manufacturer
+//   o Double price
+//   o String currentStatus
+// }
+
+// asset PCB identified by PCBID{
+//   o String PCBID
+//   o String manufacturer
+//   o Double price
+//   o String attribute
+//   o String currentStatus
+// }
+
+// participant MaterialsWorker identified by WorkerID extends Worker{
+//   o String WorkerID
+// }
+
+// participant LogisticsWorker identified by WorkerID extends Worker{
+//   o String WorkerID
+// }
+
+// participant AssemblyWorker identified by WorkerID extends Worker{
+//   o String WorkerID
+// }
+
+// transaction importRequest {
+//   --> LogisticsWorker worker
+//   --> ElectronicUnit unit
+// }
+// event importRequested{
+//   --> LogisticsWorker worker
+//   --> ElectronicUnit unit
+// }
+// transaction importComplete {
+//   --> LogisticsWorker worker
+//   --> ElectronicUnit unit
+// }
+// event importCompleted{
+//   --> LogisticsWorker worker
+//   --> ElectronicUnit unit
+// }
+// transaction moveRequest {
+//   --> MaterialsWorker worker
+//   --> ElectronicUnit unit
+// }
+// event moveRequested {
+//   --> MaterialsWorker worker
+//   --> ElectronicUnit unit
+// }
+// transaction moveComplete {
+//   --> MaterialsWorker worker
+//   --> ElectronicUnit unit
+// }
+// event moveCompleted {
+//   --> MaterialsWorker worker
+//   --> ElectronicUnit unit
+// }
+// transaction assemblyRequest {
+//   --> AssemblyWorker worker
+//   o ElectronicUnit[] units
+//   o String ECBType
+// }
+// event assemblyRequested {
+//   --> AssemblyWorker worker
+//   --> ElectronicUnit[] units
+//   o String ECBType
+// }
+// transaction assemblyComplete {
+//   --> MaterialsWorker worker
+//   --> ElectronicUnit[] units
+//   --> PCB pcb
+// }
+// event assemblyCompleted {
+//   --> ElectronicUnit[] units
+//   --> PCB pcb
+// }

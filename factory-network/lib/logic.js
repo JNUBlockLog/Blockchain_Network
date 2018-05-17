@@ -18,35 +18,67 @@
  */
 
 /**
- * Logistics imports Materials from outer world
- * @param {org.factory.importRequest} importRequest
+ * Move device Location.
+ * @param {org.factory.moveDeviceLocation} moveDeviceLocation
  * @transaction
  */
-async function importRequest(tx) {
-    let event = getFactory().newEvent('org.factory','importRequested');
-    event.worker = tx.worker
-    event.unit = tx.unit;
+async function moveDeviceLocation(tx) {
+    tx.device.department = tx.department
+
+    let event = getFactory().newEvent('org.factory','deviceLocationMoved');
+    event.device = tx.device
+    event.department = tx.department;
     emit(event)
 }
+
 /**
- * Logistics completes imports Materials from outer world
- * @param {org.factory.importComplete} importComplete
+ * Change Device Manager
+ * @param {org.factory.changeDeviceManager} changeDeviceManager
  * @transaction
  */
-async function importComplete(tx) {
-    let event = getFactory().newEvent('org.factory','importCompeleted');
-    event.worker = tx.worker
-    event.unit = tx.unit;
-    emit(event)
+async function changeDeviceManager(tx) {
+    tx.device.manager = tx.manager
 }
+
 /**
- * Logistics completes imports Materials from outer world
- * @param {org.factory.moveRequest} moveRequest
+ * Refresh Device
+ * @param {org.factory.refreshDevice} refreshDevice
  * @transaction
  */
-async function moveRequest(tx) {
-    let event = getFactory().newEvent('org.factory','moveRequested');
-    event.worker = tx.worker
-    event.unit = tx.unit;
-    emit(event)
+async function refreshDevice(tx) {
+    emit(refreshRequest)
 }
+
+// /**
+//  * Logistics imports Materials from outer world
+//  * @param {org.factory.importRequest} importRequest
+//  * @transaction
+//  */
+// async function importRequest(tx) {
+//     let event = getFactory().newEvent('org.factory','importRequested');
+//     event.worker = tx.worker
+//     event.unit = tx.unit;
+//     emit(event)
+// }
+// /**
+//  * Logistics completes imports Materials from outer world
+//  * @param {org.factory.importComplete} importComplete
+//  * @transaction
+//  */
+// async function importComplete(tx) {
+//     let event = getFactory().newEvent('org.factory','importCompeleted');
+//     event.worker = tx.worker
+//     event.unit = tx.unit;
+//     emit(event)
+// }
+// /**
+//  * Logistics completes imports Materials from outer world
+//  * @param {org.factory.moveRequest} moveRequest
+//  * @transaction
+//  */
+// async function moveRequest(tx) {
+//     let event = getFactory().newEvent('org.factory','moveRequested');
+//     event.worker = tx.worker
+//     event.unit = tx.unit;
+//     emit(event)
+// }
