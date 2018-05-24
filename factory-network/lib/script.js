@@ -37,7 +37,17 @@ async function moveDeviceLocation(tx) {
  * @transaction
  */
 async function changeDeviceManager(tx) {
-    tx.device.manager = tx.manager
+    tx.device.DeviceManager = tx.manager
+    
+    let assetRegistry = await getAssetRegistry('org.factory.Device');
+
+    // Update the asset in the asset registry.
+ 	await assetRegistry.update(tx.device);
+  	
+  	let event = getFactory().newEvent('org.factory','deviceManagerChanged');
+  	event.device = tx.device.DeviceID
+    event.manager = tx.manager
+    emit(event)
 }
 
 /**
@@ -46,39 +56,26 @@ async function changeDeviceManager(tx) {
  * @transaction
  */
 async function refreshDevice(tx) {
-    emit(refreshRequest)
+  	let event = getFactory().newEvent('org.factory','refreshRequest');
+    emit(event)
 }
 
-// /**
-//  * Logistics imports Materials from outer world
-//  * @param {org.factory.importRequest} importRequest
-//  * @transaction
-//  */
-// async function importRequest(tx) {
-//     let event = getFactory().newEvent('org.factory','importRequested');
-//     event.worker = tx.worker
-//     event.unit = tx.unit;
-//     emit(event)
-// }
-// /**
-//  * Logistics completes imports Materials from outer world
-//  * @param {org.factory.importComplete} importComplete
-//  * @transaction
-//  */
-// async function importComplete(tx) {
-//     let event = getFactory().newEvent('org.factory','importCompeleted');
-//     event.worker = tx.worker
-//     event.unit = tx.unit;
-//     emit(event)
-// }
-// /**
-//  * Logistics completes imports Materials from outer world
-//  * @param {org.factory.moveRequest} moveRequest
-//  * @transaction
-//  */
-// async function moveRequest(tx) {
-//     let event = getFactory().newEvent('org.factory','moveRequested');
-//     event.worker = tx.worker
-//     event.unit = tx.unit;
-//     emit(event)
-// }
+/**
+ * Refresh Device
+ * @param {org.factory.updateDeviceStatus} updateDeviceStatus
+ * @transaction
+ */
+async function updateDeviceStatus(tx) {
+  tx.device.CPUInfomation = tx.CPUInfomation
+  tx.device.MACAddress = tx.MACAddress
+  tx.device.Processes = tx.Processes
+  tx.device.DeviceType = tx.DeviceType
+  tx.device.DeviceDesc = tx.DeviceDesc
+  
+  let assetRegistry = await getAssetRegistry('org.factory.Device');
+  await assetRegistry.update(tx.device);
+  
+  let event = getFactory().newEvent('org.factory','deviceUpdated');
+  event.device = tx.device
+  emit(event)
+}

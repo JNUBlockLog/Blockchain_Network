@@ -1,0 +1,39 @@
+query findDeviceName{
+    description: 
+    "find Device by name"
+    statement:
+        SELECT org.factory.Device
+            WHERE (_$name == name)
+}
+
+query findAP{
+    description: 
+    "find AP by name"
+    statement:
+        SELECT org.factory.WiFiAP
+            WHERE (_$deviceName == name)
+}
+
+query findDevicebyDepartmentID{
+    description: 
+    "find Device by Department"
+    statement:
+        SELECT org.factory.Device
+            WHERE (_$departmentID == currentDepartment)
+}
+
+query findDepertmentByName{
+    description:
+    "find Department by Department Name"
+    statement:
+        SELECT org.factory.Department
+          WHERE(_$departmentName == name)
+}
+
+query findDeviceMovementByName{
+    description:
+    "find Department by Department Movement"
+    statement:
+        SELECT org.factory.moveDeviceLocation
+          WHERE(_$deviceID == device)
+}

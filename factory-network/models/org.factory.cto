@@ -3,22 +3,43 @@
  */
 
 namespace org.factory
+asset WiFiAP identified by APID{
+  o String APID
+  o String name
+  --> Department department
+}
 
 asset Device identified by DeviceID{
   o String DeviceID
+  o String name
+  o String CPUInfomation
+  o String MACAddress
+  o String DeviceType
+  o String DeviceDesc
+  --> Department currentDepartment
+  --> Worker DeviceUser
+  --> DeviceManager DeviceManager
+  o String Processes
 }
 
 participant Department identified by DepartmentID {
   o String DepartmentID
+  o String name
 }
 
 participant SecurityManager identified by EmployeeID {
   o String EmployeeID
   --> Department departmentID
+  o String name
 }
 
 participant DeviceManager identified by EmployeeID {
   o String EmployeeID
+  --> Department departmentID
+  o String name
+}
+participant Worker identified by WorkerID{
+  o String WorkerID
   --> Department departmentID
 }
 
@@ -42,100 +63,25 @@ transaction refreshDevice {
 event refreshRequest {
 }
 
+transaction updateDeviceStatus{
+  --> Device device
+  o String CPUInfomation
+  o String MACAddress
+  o String Processes
+  o String DeviceType
+  o String DeviceDesc
+}
+
+event deviceUpdated{
+  --> Device device
+}
+
 transaction changeDeviceManager {
   --> Device device
   --> DeviceManager manager
 }
 
-// abstract participant Worker{
-// }
-
-// asset Device identified by DeviceID{
-//   o String DeviceID
-//   o String CPUInfomation
-//   o String Processes
-//   o String MACAddress
-//   o String DeviceType
-//   o String DeviceDesc
-//   --> Worker DeviceUser
-//   --> Worker DeviceManager
-// }
-
-// asset ElectronicUnit identified by EUID{
-//   o String EUID
-//   o String manufacturer
-//   o Double price
-//   o String currentStatus
-// }
-
-// asset PCB identified by PCBID{
-//   o String PCBID
-//   o String manufacturer
-//   o Double price
-//   o String attribute
-//   o String currentStatus
-// }
-
-// participant MaterialsWorker identified by WorkerID extends Worker{
-//   o String WorkerID
-// }
-
-// participant LogisticsWorker identified by WorkerID extends Worker{
-//   o String WorkerID
-// }
-
-// participant AssemblyWorker identified by WorkerID extends Worker{
-//   o String WorkerID
-// }
-
-// transaction importRequest {
-//   --> LogisticsWorker worker
-//   --> ElectronicUnit unit
-// }
-// event importRequested{
-//   --> LogisticsWorker worker
-//   --> ElectronicUnit unit
-// }
-// transaction importComplete {
-//   --> LogisticsWorker worker
-//   --> ElectronicUnit unit
-// }
-// event importCompleted{
-//   --> LogisticsWorker worker
-//   --> ElectronicUnit unit
-// }
-// transaction moveRequest {
-//   --> MaterialsWorker worker
-//   --> ElectronicUnit unit
-// }
-// event moveRequested {
-//   --> MaterialsWorker worker
-//   --> ElectronicUnit unit
-// }
-// transaction moveComplete {
-//   --> MaterialsWorker worker
-//   --> ElectronicUnit unit
-// }
-// event moveCompleted {
-//   --> MaterialsWorker worker
-//   --> ElectronicUnit unit
-// }
-// transaction assemblyRequest {
-//   --> AssemblyWorker worker
-//   o ElectronicUnit[] units
-//   o String ECBType
-// }
-// event assemblyRequested {
-//   --> AssemblyWorker worker
-//   --> ElectronicUnit[] units
-//   o String ECBType
-// }
-// transaction assemblyComplete {
-//   --> MaterialsWorker worker
-//   --> ElectronicUnit[] units
-//   --> PCB pcb
-// }
-// event assemblyCompleted {
-//   --> ElectronicUnit[] units
-//   --> PCB pcb
-// }
+event deviceManagerChanged {
+  --> Device device
+  --> DeviceManager manager
+}
