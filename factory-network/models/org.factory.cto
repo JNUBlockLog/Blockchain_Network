@@ -12,13 +12,13 @@ asset WiFiAP identified by APID{
 asset Device identified by DeviceID{
   o String DeviceID
   o String name
-  o String CPUInfomation
-  o String MACAddress
   o String DeviceType
   o String DeviceDesc
-  --> Department currentDepartment
   --> Worker DeviceUser
   --> DeviceManager DeviceManager
+  --> Department currentDepartment
+  o String CPUInfomation
+  o String MACAddress
   o String Processes
 }
 
