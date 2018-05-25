@@ -41,6 +41,7 @@ participant DeviceManager identified by EmployeeID {
 participant Worker identified by WorkerID{
   o String WorkerID
   --> Department departmentID
+  o String name
 }
 
 event deviceEnrolled {
