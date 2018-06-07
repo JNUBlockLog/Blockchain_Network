@@ -45,7 +45,6 @@
         "license-check-and-add": "~2.3.0",
         "mkdirp": "^0.5.1",
         "mocha": "^3.2.0",
-        "moment": "^2.22.2",
         "nyc": "^11.0.2"
     },
     "license-check-and-add-config": {
