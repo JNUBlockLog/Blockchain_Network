@@ -3,7 +3,7 @@
         "composer": "^0.19.0"
     },
     "name": "factory-network",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "a smart factory network",
     "networkImage": "https://hyperledger.github.io/composer-sample-networks/packages/basic-sample-network/networkimage.svg",
     "networkImageanimated": "https://hyperledger.github.io/composer-sample-networks/packages/basic-sample-network/networkimageanimated.svg",

@@ -1,5 +1,5 @@
 let moment = require('moment')
-let cardName = "admin@hackerton-network"
+let cardName = "admin@factory-network"
 
 let composer = require('composer-client');
 let BusinessNetworkConnection = composer.BusinessNetworkConnection;
@@ -13,14 +13,17 @@ async function main() {
     definition = await connection.connect(cardName);
     factory = definition.getFactory();
     // 모두 제거
+    
     var before = moment().unix()
     console.log("데이터 제거 중..");
+    try{
     await removeAllAsset('org.factory.WiFiAP');
     await removeAllAsset('org.factory.Device');
     await removeAllParticipant('org.factory.Department');
     await removeAllParticipant('org.factory.SecurityManager');
     await removeAllParticipant('org.factory.DeviceManager');
     await removeAllParticipant('org.factory.Worker');
+    }catch(e){}
     var after = moment().unix()
     console.log(after - before)
     
@@ -67,7 +70,7 @@ async function main() {
     let workerL = await addWorker('',assembly_id);
     let workerM = await addWorker('',security_id);
     var after = moment().unix()
-    getAllIDs("Participant","org.factory.Worker", "일꾼");
+    await getAllIDs("Participant","org.factory.Worker", "일꾼");
     console.log(after - before)
     
     // WiFi Device 추가
@@ -110,7 +113,7 @@ async function main() {
     }
     await addDevice(WiFiD,workerM,dev_manA,security_id)
     var after = moment().unix()
-    getAllIDs("Asset","org.factory.Device", "WiFi");
+    await getAllIDs("Asset","org.factory.Device", "WiFi");
     console.log(after - before)
     // 일반 Device 추가
 }
@@ -145,7 +148,7 @@ async function addWiFiAP(name, departmentID){
     let currentTime = moment().unix();
     let newResource = factory.newResource('org.factory','WiFiAP', currentTime.toString());
     newResource.name = name;
-    newResource.department = departmentID;
+    newResource.department = factory.newRelationship('org.factory', 'Department', departmentID);
     await registry.add(newResource);
     return currentTime.toString();
 }
@@ -159,14 +162,14 @@ async function addDevice(deviceData, user, manager, department){
     newResource.CPUInfomation = deviceData.CPUInfomation;
     newResource.MACAddress = deviceData.MACAddress;
     newResource.Processes = deviceData.Processes;
-    newResource.DeviceUser = deviceData.user
-    newResource.DeviceManager = deviceData.manager
-    newResource.cyrrentDepartment = deviceData.department
+    newResource.DeviceUser = factory.newRelationship('org.factory','Worker',user);
+    newResource.DeviceManager = factory.newRelationship('org.factory','DeviceManager',manager);
+    newResource.currentDepartment = factory.newRelationship('org.factory','Department',department);
     await registry.add(newResource);
     return currentTime.toString();
 }
 async function addDepartment(name){
-    let registry = await connection.getAssetRegistry('org.factory.Department');
+    let registry = await connection.getParticipantRegistry('org.factory.Department');
     let currentTime = moment().unix();
     let newResource = factory.newResource('org.factory','Department', currentTime.toString());
     newResource.name = name;
@@ -174,29 +177,29 @@ async function addDepartment(name){
     return currentTime.toString();
 }
 async function addSecurityManager(name, departmentID){
-    let registry = await connection.getAssetRegistry('org.factory.SecurityManager');
+    let registry = await connection.getParticipantRegistry('org.factory.SecurityManager');
     let currentTime = moment().unix();
     let newResource = factory.newResource('org.factory','SecurityManager', currentTime.toString());
     newResource.name = name;
-    newResource.departmentID = departmentID;
+    newResource.departmentID=factory.newRelationship('org.factory', 'Department',departmentID);
     await registry.add(newResource);
     return currentTime.toString();
 }
 async function addDeviceManager(name, departmentID){
-    let registry = await connection.getAssetRegistry('org.factory.DeviceManager');
+    let registry = await connection.getParticipantRegistry('org.factory.DeviceManager');
     let currentTime = moment().unix();
     let newResource = factory.newResource('org.factory','DeviceManager', currentTime.toString());
     newResource.name = name;
-    newResource.departmentID = departmentID;
+    newResource.departmentID=factory.newRelationship('org.factory', 'Department',departmentID);
     await registry.add(newResource);
     return currentTime.toString();
 }
 async function addWorker(name, departmentID){
-    let registry = await connection.getAssetRegistry('org.factory.Worker');
+    let registry = await connection.getParticipantRegistry('org.factory.Worker');
     let currentTime = moment().unix();
     let newResource = factory.newResource('org.factory','Worker', currentTime.toString());
     newResource.name = name;
-    newResource.departmentID = departmentID;
+    newResource.departmentID=factory.newRelationship('org.factory', 'Department',departmentID);
     await registry.add(newResource);
     return currentTime.toString();
 }
@@ -216,12 +219,16 @@ async function getAllAsset(FDQN) {
 async function removeAllAsset(FDQN) {
     let registry = await connection.getAssetRegistry(FDQN);
     let list = await registry.getAll();
+    try{
     await registry.removeAll(list)
+    } catch(e){}
 }
 async function removeAllParticipant(FDQN) {
     let registry = await connection.getParticipantRegistry(FDQN);
     let list = await registry.getAll();
+    try{
     await registry.removeAll(list)
+} catch(e){}
 }
 async function updateAsset(FDQN,data){
     let registry = await connection.getAssetRegistry(FDQN);
@@ -233,8 +240,12 @@ async function updateParticipant(FDQN,data){
 }
 
 async function getAllIDs(type, FDQN, comment){
-    if(type='Asset') {let list = await getAllAsset(FDQN)}
-    else if(type='Participant') {let list = await getAllParticipant(FDQN)}
+    let list = []
+    if(type=='Asset') {
+        list = await getAllAsset(FDQN)}
+    else if(type=='Participant') {
+        list = await getAllParticipant(FDQN)}
+    else console.log("Error Occured!")
     for(var i=0; i<list.length;i++){
         console.log(`${comment} name : ${list[i].name}`)
     }

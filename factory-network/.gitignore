@@ -1,0 +1,6 @@
+node_modules
+credentials
+*.card
+*.bna
+certificate
+connection.json
