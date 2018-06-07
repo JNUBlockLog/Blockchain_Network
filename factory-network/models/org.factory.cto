@@ -6,6 +6,7 @@ namespace org.factory
 asset WiFiAP identified by APID{
   o String APID
   o String name
+  o String MACAddress
   --> Department department
 }
 
