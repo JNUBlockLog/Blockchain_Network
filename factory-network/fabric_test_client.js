@@ -1,6 +1,6 @@
 let moment = require('moment')
 let cardName = "admin@factory-network"
-
+let process = require('process')
 let composer = require('composer-client');
 let BusinessNetworkConnection = composer.BusinessNetworkConnection;
 
@@ -84,7 +84,7 @@ async function main() {
         MACAddress : "11:22:33:44:55:66",
         Processes : "1 Online"
     }
-    await addDevice(WiFiA,workerA,dev_manA,logistics_id)
+    await addDevice(WiFiA,workerA,dev_manA,"11:22:33:44:55:66")
     let WiFiB = {
         name : "자재부서",
         DeviceType : "AP",
@@ -93,7 +93,7 @@ async function main() {
         MACAddress : "22:33:44:55:66:77",
         Processes : "1 Online"
     }
-    await addDevice(WiFiB,workerC,dev_manA,materials_id)
+    await addDevice(WiFiB,workerC,dev_manA,"11:22:33:44:55:66")
     let WiFiC = {
         name : "조립부서",
         DeviceType : "AP",
@@ -102,7 +102,7 @@ async function main() {
         MACAddress : "33:44:55:66:77:88",
         Processes : "1 Online"
     }
-    await addDevice(WiFiC,workerF,dev_manB,assembly_id)
+    await addDevice(WiFiC,workerF,dev_manB,"11:22:33:44:55:66")
     let WiFiD = {
         name : "보안부서",
         DeviceType : "AP",
@@ -111,11 +111,14 @@ async function main() {
         MACAddress : "44:55:66:77:88:99",
         Processes : "1 Online"
     }
-    await addDevice(WiFiD,workerM,dev_manA,security_id)
+    await addDevice(WiFiD,workerM,dev_manA,"11:22:33:44:55:66")
     var after = moment().unix()
     await getAllIDs("Asset","org.factory.Device", "WiFi");
     console.log(after - before)
     // 일반 Device 추가
+
+    //종료
+    process.exit(0)
 }
 
 async function request(requester, x, y) {
@@ -152,7 +155,7 @@ async function addWiFiAP(name, departmentID){
     await registry.add(newResource);
     return currentTime.toString();
 }
-async function addDevice(deviceData, user, manager, department){
+async function addDevice(deviceData, user, manager, currentMAC){
     let registry = await connection.getAssetRegistry('org.factory.Device');
     let currentTime = moment().unix();
     let newResource = factory.newResource('org.factory','Device', currentTime.toString());
@@ -164,7 +167,8 @@ async function addDevice(deviceData, user, manager, department){
     newResource.Processes = deviceData.Processes;
     newResource.DeviceUser = factory.newRelationship('org.factory','Worker',user);
     newResource.DeviceManager = factory.newRelationship('org.factory','DeviceManager',manager);
-    newResource.currentDepartment = factory.newRelationship('org.factory','Department',department);
+    newResource.currentDepartment = factory.newRelationship('org.factory','Department','0');
+    newResource.CurrentMAC = currentMAC;
     await registry.add(newResource);
     return currentTime.toString();
 }
@@ -251,10 +255,7 @@ async function getAllIDs(type, FDQN, comment){
     }
 }
 
-/* Queries */
-async function query_FindEmergencyBed(queryName, parameters){
-    return await connection.query(queryName, parameters);
-}
+
 
 /*
 

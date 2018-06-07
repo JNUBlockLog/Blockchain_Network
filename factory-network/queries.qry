@@ -10,16 +10,8 @@ query findAP{
     description: 
     "find AP by name"
     statement:
-        SELECT org.factory.WiFiAP
-            WHERE (_$deviceName == name)
-}
-
-query findDevicebyDepartmentID{
-    description: 
-    "find Device by Department"
-    statement:
         SELECT org.factory.Device
-            WHERE (_$departmentID == currentDepartment)
+            WHERE (DeviceType == "AP")
 }
 
 query findDepertmentByName{

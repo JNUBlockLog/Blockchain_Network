@@ -18,6 +18,7 @@ asset Device identified by DeviceID{
   --> Worker DeviceUser
   --> DeviceManager DeviceManager
   --> Department currentDepartment
+  o String CurrentMAC
   o String CPUInfomation
   o String MACAddress
   o String Processes
